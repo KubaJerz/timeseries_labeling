@@ -45,9 +45,9 @@ Run the app with a specified CSV file, port, and theme.
 
 ### ***Running Multiple Instances***
 
-`python plt_dash_prototype.py ./0/path/to/acceleration.csv 8051`
-`python plt_dash_prototype.py ./1/path/to/acceleration.csv 8052`
-`python plt_dash_prototype.py ./2/path/to/acceleration.csv 8053`
+`python plt_dash_prototype.py ./0/path/to/acceleration.csv 8051 
+python plt_dash_prototype.py ./1/path/to/acceleration.csv 8052 
+python plt_dash_prototype.py ./2/path/to/acceleration.csv 8053`
 
 You can run multiple instances of the app on different ports by specifying the port number as a command-line argument.
 
