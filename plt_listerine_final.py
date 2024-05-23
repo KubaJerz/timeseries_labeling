@@ -82,20 +82,30 @@ data = {
 stack = []
 
 app.layout = html.Div([
-    html.Button(id='btn', children=current_option, style={'backgroundColor': button_color, 'color': 'white'}), 
-    html.Button(id='save_btn', children='save btn', style={'position': 'absolute', 'top': '8px', 'right': '50px'}),
-    html.Button(id='undo_btn', children='undo', style={'position': 'absolute', 'top': '8px', 'right': '550px'}),
-    dcc.Graph(
+    html.Div([
+        html.Button(id='btn', children=current_option, style={'backgroundColor': button_color, 'color': 'white'}),
+        html.Button(id='undo_btn', children='undo', style={'backgroundColor': 'gray', 'color': 'white'}),
+        html.Button(id='save_btn', children='save btn', style={'backgroundColor': '#784212', 'color': 'white'}),
+    ], style={
+        'display': 'flex',
+        'justify-content': 'space-between',
+        'align-items': 'center',
+        'width': '100%',
+        'max-width': '1000px',  # Maximum width for the button container
+        'margin': '0 auto',  # Center the container
+        'padding': '10px'
+    }),
+    html.Div([dcc.Graph(
         id='graph',
         figure=px.line(acc_data, x='timestamp', y='x', title=data_filename).update_layout(
             xaxis_title='Time (s)',
-            yaxis_title='Acceleration (m/s²)',
-            width=1800,
-            height=900
+            yaxis_title='Acceleration (m/s²)'
         ).add_trace(go.Scatter(x=acc_data['timestamp'], y=acc_data['y'], mode='lines', name='y'))
          .add_trace(go.Scatter(x=acc_data['timestamp'], y=acc_data['z'], mode='lines', name='z'))
          .update_layout(template=theme)
-    ),
+    )],style={
+        'width': '100vw'
+        }),
     dcc.Store(id='current_option', data=current_option),
     dcc.Store(id='current_option_index', data=current_option_index),
     dcc.Store(id='start_time', data=None),
@@ -223,6 +233,34 @@ def write_data_to_file():
 def exit_app(n_clicks):
     if n_clicks:
         write_data_to_file()
+
+# Global CSS to ensure no scroll bars
+app.index_string = '''
+<!DOCTYPE html>
+<html>
+    <head>
+        {%metas%}
+        <title>Label Listerine</title>
+        {%favicon%}
+        {%css%}
+        <style>
+            html, body {
+                margin: 0;
+                padding: 0;
+                overflow: hidden;
+            }
+        </style>
+    </head>
+    <body>
+        {%app_entry%}
+        <footer>
+            {%config%}
+            {%scripts%}
+            {%renderer%}
+        </footer>
+    </body>
+</html>
+'''       
 
 if __name__ == '__main__':
     app.run_server(debug=True, port=port)
