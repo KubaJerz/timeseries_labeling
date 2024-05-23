@@ -17,37 +17,37 @@ This project is a Dash-based web application for visualizing and interacting wit
 
 ### ***Default Mode***
 
-`python plt_dash_prototype.py`
+`python plt_listerine_final.py`
 
 Run the app with default settings: Assumes the acceleration.csv file is in the same directory and uses the default port (8050).
 
 ### ***Custom CSV File***
 
-`python plt_dash_prototype.py ./path/to/acceleration.csv`
+`python plt_listerine_final.py ./path/to/acceleration.csv`
 
 Run the app with a specified CSV file: Displays the graph for the specified CSV file and saves labels in the same directory, using the default port (8050).
 
 ### ***Custom CSV File with Custom Port or Custom Theme***
 
-`python plt_dash_prototype.py ./path/to/acceleration.csv 8051`
+`python plt_listerine_final.py ./path/to/acceleration.csv 8051`
 
 Run the app with a specified CSV file, port(e.g., 8051).
 
-`python plt_dash_prototype.py ./path/to/acceleration.csv 1`
+`python plt_listerine_final.py ./path/to/acceleration.csv 1`
 
 Run the app with a specified CSV file and theme: 0: plotly_dark, 1: seaborn, 2: plotly, using the default port (8050).
 
 ### ***Custom CSV File, Port, and Theme***
 
-`python plt_dash_prototype.py ./path/to/acceleration.csv 8051 1`
+`python plt_listerine_final.py ./path/to/acceleration.csv 8051 1`
 
 Run the app with a specified CSV file, port, and theme.
 
 ### ***Running Multiple Instances***
 
-`python plt_dash_prototype.py ./0/path/to/acceleration.csv 8051 
-python plt_dash_prototype.py ./1/path/to/acceleration.csv 8052 
-python plt_dash_prototype.py ./2/path/to/acceleration.csv 8053`
+`python plt_listerine_final.py ./0/path/to/acceleration.csv 8051 
+python plt_listerine_final.py ./1/path/to/acceleration.csv 8052 
+python plt_listerine_final.py ./2/path/to/acceleration.csv 8053`
 
 You can run multiple instances of the app on different ports by specifying the port number as a command-line argument.
 
