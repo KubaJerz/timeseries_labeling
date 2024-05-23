@@ -4,6 +4,7 @@ import pandas as pd
 from dash import html, dcc, Input, Output, State
 import plotly.graph_objects as go
 import plotly.express as px
+import plotly
 import sys
 import os
 
@@ -16,19 +17,46 @@ if len(sys.argv) == 2:
     data_filename = sys.argv[1]
     theme = themes[0]
     backgroundcolor = '#121212'
+    port = 8050  # Default port
 elif len(sys.argv) == 3:
     data_filename = sys.argv[1]
-    theme = themes[int(sys.argv[2])]
-    if sys.argv[2] != 0:
+    try:
+        port = int(sys.argv[2])
+    except ValueError:
+        theme = themes[int(sys.argv[2])]
+        if sys.argv[2] != '0':
+            backgroundcolor = 'white'
+        else:
+            backgroundcolor = '#121212'
+        port = 8050  # Default port
+    else:
+        theme = themes[0]
+        backgroundcolor = '#121212'
+elif len(sys.argv) == 4:
+    data_filename = sys.argv[1]
+    try:
+        port = int(sys.argv[2])
+    except ValueError:
+        port = 8050  # Default port
+    theme = themes[int(sys.argv[3])]
+    if sys.argv[3] != '0':
         backgroundcolor = 'white'
+    else:
+        backgroundcolor = '#121212'
 else:
     data_filename = 'acceleration.csv'
     theme = themes[0]
     backgroundcolor = '#121212'
+    port = 8050  # Default port
 
 # Load CSV data
 acc_data = pd.read_csv(data_filename, skiprows=1)
 acc_data['timestamp'] = ((acc_data['timestamp'] - acc_data['timestamp'].iloc[0]) / 1e9)
+
+#split up data is its too big
+#data_length = len(acc_data)
+#start_index = int(data_length * 15  / 16)  # Index to start plotting from
+acc_data = acc_data.iloc[::5, :]
 
 # Initial button color and option
 button_color = 'blue'
@@ -61,7 +89,9 @@ app.layout = html.Div([
         id='graph',
         figure=px.line(acc_data, x='timestamp', y='x', title=data_filename).update_layout(
             xaxis_title='Time (s)',
-            yaxis_title='Acceleration (m/s²)'
+            yaxis_title='Acceleration (m/s²)',
+            width=1800,
+            height=900
         ).add_trace(go.Scatter(x=acc_data['timestamp'], y=acc_data['y'], mode='lines', name='y'))
          .add_trace(go.Scatter(x=acc_data['timestamp'], y=acc_data['z'], mode='lines', name='z'))
          .update_layout(template=theme)
@@ -71,7 +101,7 @@ app.layout = html.Div([
     dcc.Store(id='start_time', data=None),
     dcc.Store(id='end_time', data=None),
     dcc.ConfirmDialog(id='err_msg', message="You have to select start and end time before you can switch action and hand. You have not selected end time."),
-], style={'backgroundColor': backgroundcolor, 'width': '100vw', 'height': '100vh'})
+], style={'backgroundColor': backgroundcolor, 'width': '100vw', 'height': '100vh', 'body': { 'margin': '0', 'padding': '0', 'overflow': 'hidden'}})
 
 @app.callback(
     Output('graph', 'figure', allow_duplicate=True),
@@ -176,7 +206,6 @@ def change_button_color(n_clicks, current_option_index, start_time):
         
     return current_option, {'backgroundColor': button_color, 'color': 'white'}, current_option, current_option_index, False
 
-
 def write_data_to_file():
     if len(sys.argv) > 1:
         dir_path = os.path.dirname(sys.argv[1])
@@ -196,4 +225,4 @@ def exit_app(n_clicks):
         write_data_to_file()
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server(debug=True, port=port)
